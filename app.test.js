@@ -2,15 +2,27 @@ const request = require('supertest');
 const app = require('./app');
 
 describe('Express App Tests', () => {
-    test('GET / returns hello message', async () => {
-        const response = await request(app).get('/');
-        expect(response.statusCode).toBe(200);
-        expect(response.body.message).toBe('Hello from Node.js!');
+    
+    describe('GET /', () => {
+        it('should return 200 and hello message', async () => {
+            const res = await request(app).get('/');
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveProperty('message', 'Hello from Node.js!');
+        });
     });
 
-    test('GET /health returns status OK', async () => {
-        const response = await request(app).get('/health');
-        expect(response.statusCode).toBe(200);
-        expect(response.body.status).toBe('OK');
+    describe('GET /health', () => {
+        it('should return 200 and status OK', async () => {
+            const res = await request(app).get('/health');
+            expect(res.status).toBe(200);
+            expect(res.body).toHaveProperty('status', 'OK');
+        });
+    });
+
+    describe('GET /nonexistent', () => {
+        it('should return 404 for unknown routes', async () => {
+            const res = await request(app).get('/api/unknown');
+            expect(res.status).toBe(404);
+        });
     });
 });
